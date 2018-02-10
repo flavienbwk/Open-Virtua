@@ -64,9 +64,9 @@ if [[ -z $($the_command | grep "No such") ]] ;then
     sudo apt-get install nginx -y
     sudo apt-get install ssh -y
     sudo cp "./Web/openvirtua-nginx.conf" "/etc/nginx/sites-available/"
-    sudo ln -s "./Web/openvirtua-nginx.conf" "/etc/nginx/sites-enabled/"
+    sudo ln -s "/etc/nginx/sites-available/openvirtua-nginx.conf" "/etc/nginx/sites-enabled/"
     sudo rm -rf "/var/www/openvirtua"
     sudo mkdir "/var/www/openvirtua"
-    sudo mv "./Web/Website/*" "/var/www/openvirtua"
+    sudo cp -r ./Web/Website/* /var/www/openvirtua
     echo -e "OK.\n"
 fi
