@@ -11,7 +11,6 @@
 mysql_skip="n"
 mysql_username=""
 mysql_password=""
-mysql_database="deltaaer_openvirtua"
 error=false
 the_command=""
 
@@ -38,23 +37,24 @@ if [[ $mysql_skip == "y" ]]; then
     read -p "Please enter your MySQL user: " mysql_username
     while [[ -z $mysql_username ]]
     do
-        read -p "Please ENTER your mysql user: " mysql_username
+        read -p "Please ENTER your MySQL user: " mysql_username
         echo -e "\n"
     done
     read -p "Please enter your MySQL password: " mysql_password
 
     while ! mysql -u "$mysql_username" -p"$mysql_password"  -e ";" ; do
-       read -p "Can't connect, please retry: " $mysql_password
+       read -p "Can't connect, please enter the user name : " mysql_username
+       read -p "Can't connect, please enter the password : " mysql_password
     done
 
-    echo -e "\nCreating the database..."
-    the_command=$(mysql -u$mysql_user -p$mysql_password -e "CREATE DATABASE $mysql_database")
+    echo -e "\nCreating the database... "$mysql_database
+    the_command=$(mysql -u "$mysql_user" -p$mysql_password -e "DROP DATABASE IF EXISTS deltaaer_openvirtua; CREATE DATABASE deltaaer_openvirtua;")
     echo -e "OK.\n"
-    echo $the_command | grep "Access denied"
+    echo ${the_command} | grep "Access denied"
 
-    if [[ -z $($the_command | grep "Access denied") ]] ;then
+    if [[ ! $the_command ]] ;then
         echo -e "Importing the database...\n"
-        the_command=$(mysql -u$mysql_user -p$mysql_database < "./Web/database.sql")
+        the_command=$(mysql -u "$mysql_user" -p$mysql_password < "./Web/database.sql")
         echo -e "OK.\n"
     fi
 fi
