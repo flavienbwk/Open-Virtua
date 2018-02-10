@@ -70,5 +70,6 @@ if [[ -z $($the_command | grep "No such") ]] ;then
     sudo cp -r ./Web/Website/* /var/www/openvirtua
     sudo iptables -A INPUT -p tcp --dport 8007 -j ACCEPT
     sudo service nginx restart
+    sudo iptables-save
     echo -e "OK.\n"
 fi
