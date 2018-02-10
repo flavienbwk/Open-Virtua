@@ -22,6 +22,8 @@ SET time_zone = "+00:00";
 -- Base de données :  `deltaaer_openvirtua`
 --
 
+USE deltaaer_openvirtua;
+
 -- --------------------------------------------------------
 
 --
