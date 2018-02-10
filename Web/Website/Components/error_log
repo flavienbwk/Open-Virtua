@@ -1,0 +1,115 @@
+[07-Feb-2018 14:37:34 UTC] PHP Notice:  Undefined index: X-Ov-Master-Api-Key in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 16
+[07-Feb-2018 14:37:34 UTC] PHP Notice:  Undefined variable: apiModel in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 16
+[07-Feb-2018 14:37:34 UTC] PHP Fatal error:  Uncaught Error: Call to a member function getMasterApiKey() on null in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php:16
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require()
+#1 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 16
+[07-Feb-2018 14:38:16 UTC] PHP Notice:  Undefined variable: apiModel in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 17
+[07-Feb-2018 14:38:16 UTC] PHP Fatal error:  Uncaught Error: Call to a member function getMasterApiKey() on null in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php:17
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require()
+#1 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 17
+[07-Feb-2018 14:38:22 UTC] PHP Notice:  Undefined variable: apiModel in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 16
+[07-Feb-2018 14:38:22 UTC] PHP Fatal error:  Uncaught Error: Call to a member function getMasterApiKey() on null in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php:16
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require()
+#1 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 16
+[07-Feb-2018 14:41:09 UTC] PHP Notice:  Undefined index: parameters in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 19
+[07-Feb-2018 14:47:18 UTC] PHP Notice:  Undefined variable: method in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 18
+[07-Feb-2018 14:59:34 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method apiGetModel::setUser() in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php:58
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require()
+#1 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 58
+[07-Feb-2018 20:30:02 UTC] PHP Notice:  Undefined index: x-ov-api-key in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 16
+[07-Feb-2018 20:50:11 UTC] PHP Notice:  Undefined index: 1c392287e4ee980d0f5d5ed2a91e3422b482ba34 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 19
+[07-Feb-2018 20:50:11 UTC] PHP Notice:  Undefined index: 1c392287e4ee980d0f5d5ed2a91e3422b482ba34 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 19
+[08-Feb-2018 09:26:42 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method apiPostModel::setUser() in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php:41
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require()
+#1 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 41
+[08-Feb-2018 09:27:17 UTC] PHP Notice:  Undefined property: userModel::$_database in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/userModel.php on line 33
+[08-Feb-2018 09:27:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/userModel.php:33
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php(95): userModel->getUserBy(Array)
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php(38): apiPostModel->loginUser()
+#2 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php(41): apiPostModel->execute()
+#3 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#4 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/userModel.php on line 33
+[08-Feb-2018 09:27:48 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'deltaaer_openvirtua.Users' doesn't exist in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/userModel.php:34
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/userModel.php(34): PDOStatement->execute()
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php(95): userModel->getUserBy(Array)
+#2 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php(38): apiPostModel->loginUser()
+#3 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php(41): apiPostModel->execute()
+#4 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#5 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/userModel.php on line 34
+[08-Feb-2018 09:28:41 UTC] PHP Notice:  Undefined variable: email in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php on line 144
+[08-Feb-2018 09:28:41 UTC] PHP Notice:  Undefined variable: phonenumber in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php on line 145
+[08-Feb-2018 09:45:11 UTC] PHP Notice:  Array to string conversion in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/userModel.php on line 21
+[08-Feb-2018 09:57:33 UTC] PHP Notice:  Undefined property: tokenModel::$database in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/tokenModel.php on line 26
+[08-Feb-2018 09:57:33 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/tokenModel.php:26
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/tokenModel.php(52): tokenModel->create('Token', Array)
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php(99): tokenModel->createToken('4', 'login')
+#2 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php(38): apiPostModel->loginUser()
+#3 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php(41): apiPostModel->execute()
+#4 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#5 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Index/tokenModel.php on line 26
+[08-Feb-2018 09:58:00 UTC] PHP Notice:  Undefined variable: token_name in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php on line 102
+[08-Feb-2018 11:21:57 UTC] PHP Notice:  Undefined variable: response in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Model/Api/apiPostModel.php on line 81
+[08-Feb-2018 14:18:43 UTC] PHP Notice:  Undefined index: parameters in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 25
+[08-Feb-2018 14:18:43 UTC] PHP Notice:  Undefined offset: 0 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 28
+[08-Feb-2018 14:18:43 UTC] PHP Notice:  Undefined offset: 1 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 32
+[08-Feb-2018 14:20:30 UTC] PHP Notice:  Undefined offset: 0 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 29
+[08-Feb-2018 14:20:30 UTC] PHP Notice:  Undefined offset: 1 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 33
+[08-Feb-2018 14:20:59 UTC] PHP Notice:  Undefined offset: 0 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 30
+[08-Feb-2018 14:20:59 UTC] PHP Notice:  Undefined offset: 1 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 34
+[08-Feb-2018 14:21:18 UTC] PHP Notice:  Undefined offset: 1 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Api/indexController.php on line 33
+[10-Feb-2018 09:17:46 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 12
+[10-Feb-2018 09:17:48 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 12
+[10-Feb-2018 09:17:58 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 13
+[10-Feb-2018 09:17:58 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 13
+[10-Feb-2018 09:18:01 UTC] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 13
+[10-Feb-2018 09:18:09 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Page::showPHPErrors() in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php:7
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Documentation/front-apiController.php(15): require()
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#2 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:18:33 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ssh2_connect() in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php:7
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Documentation/front-apiController.php(15): require()
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#2 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:18:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ssh2_connect() in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php:7
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Documentation/front-apiController.php(15): require()
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#2 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:18:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ssh2_connect() in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php:7
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Documentation/front-apiController.php(15): require()
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#2 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:18:36 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ssh2_connect() in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php:7
+Stack trace:
+#0 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Controller/Documentation/front-apiController.php(15): require()
+#1 /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/Components/Router.php(93): require('/home/deltaaer/...')
+#2 {main}
+  thrown in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:22:21 UTC] PHP Warning:  ssh2_connect(): php_network_getaddresses: getaddrinfo failed: Name or service not known in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:22:21 UTC] PHP Warning:  ssh2_connect(): Unable to connect to myserver.com on port 22 in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:22:21 UTC] PHP Warning:  ssh2_connect(): Unable to connect to myserver.com in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 7
+[10-Feb-2018 09:22:21 UTC] PHP Warning:  ssh2_auth_password() expects parameter 1 to be resource, boolean given in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 8
+[10-Feb-2018 09:24:58 UTC] PHP Warning:  ssh2_auth_password(): Authentication failed for root using password in /home/deltaaer/public_html/berwick.fr/projects/etna/open-virtua/View/Documentation/front-apiView.php on line 8
