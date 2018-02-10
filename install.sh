@@ -68,9 +68,7 @@ if [[ -z $($the_command | grep "No such") ]] ;then
     sudo rm -rf "/var/www/openvirtua"
     sudo mkdir "/var/www/openvirtua"
     sudo cp -r ./Web/Website/* /var/www/openvirtua
-    sudo apt-get install ufw -y
-    sudo ufw enable -y
-    sudo ufw allow 8007
+    sudo iptables -A INPUT -p tcp --dport 8007 -j ACCEPT
     sudo service nginx restart
     echo -e "OK.\n"
 fi
