@@ -67,6 +67,6 @@ if [[ -z $($the_command | grep "No such") ]] ;then
     sudo ln -s "./Web/openvirtua-nginx.conf" "/etc/nginx/sites-enabled/"
     sudo rm -rf "/var/www/openvirtua"
     sudo mkdir "/var/www/openvirtua"
-    sudo mv "./Web/*" "/var/www/openvirtua"
+    sudo mv "./Web/Website/*" "/var/www/openvirtua"
     echo -e "OK.\n"
 fi
