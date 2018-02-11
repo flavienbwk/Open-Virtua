@@ -1,8 +1,8 @@
 <main role="main">
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-3">Front-end API</h1>
-            <p>A front-end REST API is available for the web interface so it can interact with the back-end.</p>
+            <h1 class="display-3">Back-end API</h1>
+            <p>A back-end REST API is available for the web interface so it can interact with the back-end.</p>
         </div>
     </div>
 
