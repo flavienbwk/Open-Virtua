@@ -38,7 +38,7 @@
                 <div class="card-group">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Primary routes</h4>
+                            <h4>Authentication routes</h4>
                         </div>
                         <div class="card-block">
                             <br/>
@@ -473,18 +473,6 @@
                                                                 <span class="parameter-a">The password of the user.</span>
                                                             </span>
                                                         </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">memory
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">(optional) The total memory of your server in Mo. Will be filled automatically if not provided.</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">storage
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">(optional) The total storage of your server in Mo. Will be filled automatically if not provided.</span>
-                                                            </span>
-                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -591,16 +579,6 @@
                                                             <td>The IP of the server.</td>
                                                         </tr>
                                                         <tr>
-                                                            <td><pre>mac</pre></td>
-                                                            <td><pre><i>(string)</i></pre></td>
-                                                            <td>The MAC address of the server.</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><pre>gateway</pre></td>
-                                                            <td><pre><i>(string)</i></pre></td>
-                                                            <td>The gateway of the server.</td>
-                                                        </tr>
-                                                        <tr>
                                                             <td><pre>memory</pre></td>
                                                             <td><pre><i>(int)</i></pre></td>
                                                             <td>The total memory (RAM) in Mo of the server.</td>
@@ -684,18 +662,6 @@
                                                             <span class="parameter">password
                                                                 <span class="parameter-btw">|</span>
                                                                 <span class="parameter-a"><i>(Optional)</i> The password to modify.</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">memory
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a"><i>(Optional)</i> The total max memory allocated to your VMs to modify.</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">storage
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a"><i>(Optional)</i> The total max storage allocated to your VMs to modify.</span>
                                                             </span>
                                                         </li>
                                                     </ul>
@@ -805,7 +771,8 @@
                                                                 <pre>[
  "slave_id": (string),
  "name": (string),
- "ip": (string)
+ "ip": (string),
+ "ssh_port": (int)
 ]</pre>
                                                             </td>
                                                         </tr>
@@ -880,15 +847,9 @@
                                                             </span>
                                                         </li>
                                                         <li class="list-group-item">
-                                                            <span class="parameter">ip
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">IP to which connect to the master server (can be local).</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
                                                             <span class="parameter">username
                                                                 <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">The password of the user.</span>
+                                                                <span class="parameter-a">The username of the user.</span>
                                                             </span>
                                                         </li>
                                                         <li class="list-group-item">
@@ -907,18 +868,6 @@
                                                             <span class="parameter">storage
                                                                 <span class="parameter-btw">|</span>
                                                                 <span class="parameter-a">The quantity of storage for your VM in Mo. Must be lesser than the master server total storage.</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">gateway
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">IP of the gateway of the server.</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">mac
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">(optional) MAC address of the server. Expert only.</span>
                                                             </span>
                                                         </li>
                                                     </ul>
@@ -992,6 +941,12 @@
                                                                 <span class="parameter-a">The ID of the slave server.</span>
                                                             </span>
                                                         </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">master_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the master machine on which is hosted the slave.</span>
+                                                            </span>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -1005,11 +960,6 @@
                                                             <th>Index</th>
                                                             <th>Return value</th>
                                                             <th>Description</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><pre>master_id</pre></td>
-                                                            <td><pre><i>(string)</i></pre></td>
-                                                            <td>The ID of the master server on which is hosted the slave.</td>
                                                         </tr>
                                                         <tr>
                                                             <td><pre>hypervisor_name</pre></td>
@@ -1030,6 +980,11 @@
                                                             <td><pre>ip</pre></td>
                                                             <td><pre><i>(string)</i></pre></td>
                                                             <td>The IP of the server.</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><pre>ssh_port</pre></td>
+                                                            <td><pre><i>(int)</i></pre></td>
+                                                            <td>The SSH port of the server.</td>
                                                         </tr>
                                                         <tr>
                                                             <td><pre>mac</pre></td>
@@ -1110,6 +1065,12 @@
                                                             </span>
                                                         </li>
                                                         <li class="list-group-item">
+                                                            <span class="parameter">master_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the master machine on which is hosted the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
                                                             <span class="parameter">command
                                                                 <span class="parameter-btw">|</span>
                                                                 <span class="parameter-a">The command you want to send to the slave.</span>
@@ -1143,6 +1104,261 @@
                                     </div>
                                     <br>
                                 </div>
+                                <div class="col-lg-6">
+                                    <div class="doc-container">
+                                        <div class="doc-title">
+                                            <h4>
+                                                Slave preseeds list
+                                            </h4>
+                                            <p>
+                                                Get the list of the preseeds for a special slave.
+                                            </p>
+                                            <hr>
+                                        </div>
+                                        <div class="doc-method-post">
+                                            POST
+                                        </div>
+                                        <div class="doc-url">
+                                            <p>
+                                                /api/slave/preseeds
+                                            </p>
+                                        </div>
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <br>
+                                                    <a data-toggle="collapse" href="#parameters_slave_preseeds" class="" aria-expanded="true"><i>Parameters :</i></a>
+                                                </div>
+                                                <div id="parameters_slave_preseeds" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">token_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The login token.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">user_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">ID of the user logged in.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">slave_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">ID of the slave server to send the command to.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">master_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the master machine on which is hosted the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="doc-parameters">
+                                            <a data-toggle="collapse" href="#response_slave_preseeds"><i>Response :</i></a>
+                                            <div id="response_slave_preseeds" class="panel-collapse collapse doc-parameters">
+                                                <table class="table table-bordered table-striped table-responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Index</th>
+                                                            <th>Return value</th>
+                                                            <th>Description</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><pre>list</pre></td>
+                                                            <td><pre><i>(array)</i></pre></td>
+                                                            <td>
+                                                                <pre>[
+ "preseed_id": (int),
+ "execution_order": (int),
+ "executed": (int) (1 = already executed or 0 = not executed yet )
+]</pre>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="doc-container">
+                                        <div class="doc-title">
+                                            <h4>
+                                                Add a preseed to a slave
+                                            </h4>
+                                            <p>
+                                                Add a preseed to your VM slave. In the order you want.
+                                            </p>
+                                            <hr>
+                                        </div>
+                                        <div class="doc-method-post">
+                                            POST
+                                        </div>
+                                        <div class="doc-url">
+                                            <p>
+                                                /api/slave/preseeds/add
+                                            </p>
+                                        </div>
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <br>
+                                                    <a data-toggle="collapse" href="#parameters_preseed_slave_add" class="" aria-expanded="true"><i>Parameters :</i></a>
+                                                </div>
+                                                <div id="parameters_preseed_slave_add" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">token_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The login token.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">user_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">ID of the user logged in.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">preseed_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the preseed you want to add to the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">slave_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the slave you want to add the preseed to.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">master_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the master machine on which is hosted the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">execution_order
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">(int) The order of execution of this preseed for the slave VM you want. Will be executed, in order, during the installation.</span>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="doc-parameters">
+                                            <a data-toggle="collapse" href="#response_preseed_slave_add"><i>Response :</i></a>
+                                            <div id="response_preseed_slave_add" class="panel-collapse collapse doc-parameters">
+                                                <table class="table table-bordered table-striped table-responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Index</th>
+                                                            <th>Return value</th>
+                                                            <th>Description</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><pre><i>(nothing)</i></pre></td>
+                                                            <td><pre></pre></td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="doc-container">
+                                        <div class="doc-title">
+                                            <h4>
+                                                Remove a preseed from a slave
+                                            </h4>
+                                            <p>
+                                                Remove a preseed from your VM slave.
+                                            </p>
+                                            <hr>
+                                        </div>
+                                        <div class="doc-method-post">
+                                            POST
+                                        </div>
+                                        <div class="doc-url">
+                                            <p>
+                                                /api/slave/preseeds/remove
+                                            </p>
+                                        </div>
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <br>
+                                                    <a data-toggle="collapse" href="#parameters_preseed_slave_remove" class="" aria-expanded="true"><i>Parameters :</i></a>
+                                                </div>
+                                                <div id="parameters_preseed_slave_remove" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">token_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The login token.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">user_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">ID of the user logged in.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">preseed_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the preseed you want to add to the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">slave_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the slave you want to remove the preseed from.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">master_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the master on which is created the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="doc-parameters">
+                                            <a data-toggle="collapse" href="#response_preseed_slave_remove"><i>Response :</i></a>
+                                            <div id="response_preseed_slave_remove" class="panel-collapse collapse doc-parameters">
+                                                <table class="table table-bordered table-striped table-responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Index</th>
+                                                            <th>Return value</th>
+                                                            <th>Description</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><pre><i>(array)</i></pre></td>
+                                                            <td><pre></pre></td>
+                                                            <td>If the query succeed, you will get the "error" key to "false", as usual.</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1152,7 +1368,7 @@
                 <div class="card-group">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Distributions & Hypervisors - <i>Getters</i></h4>
+                            <h4>Distributions & Hypervisors</h4>
                             <p>Hypervisors are the technologies used to run your virtual machines. Distributions are the OS that run on your VMs.</p>
                         </div>
                         <div class="card-block">
@@ -1388,20 +1604,6 @@
                                     </div>
                                     <br>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12">
-                <div class="card-group">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4>Distributions & Hypervisors - <i>Setters</i></h4>
-                        </div>
-                        <div class="card-block">
-                            <br/>
-                            <div class="row">
                                 <div class="col-lg-6">
                                     <div class="doc-container">
                                         <div class="doc-title">
@@ -1409,7 +1611,7 @@
                                                 Create a preseed
                                             </h4>
                                             <p>
-                                                A script which will be executed at the creation of the server. We allow you to create a custom preseed.
+                                                A script which will be executed at the first launch of a Slave (VM). We allow you to create a custom preseed.
                                             </p>
                                             <hr>
                                         </div>
@@ -1418,16 +1620,16 @@
                                         </div>
                                         <div class="doc-url">
                                             <p>
-                                                /api/distribution/preseeds/create
+                                                /api/preseed/create
                                             </p>
                                         </div>
                                         <div class="panel-group">
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <br>
-                                                    <a data-toggle="collapse" href="#parameters_preseeds_create" class="" aria-expanded="true"><i>Parameters :</i></a>
+                                                    <a data-toggle="collapse" href="#parameters_preseed_create" class="" aria-expanded="true"><i>Parameters :</i></a>
                                                 </div>
-                                                <div id="parameters_preseeds_create" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
+                                                <div id="parameters_preseed_create" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
                                                     <ul class="list-group">
                                                         <li class="list-group-item">
                                                             <span class="parameter">token_id
@@ -1444,7 +1646,7 @@
                                                         <li class="list-group-item">
                                                             <span class="parameter">distribution_id
                                                                 <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">The ID of the distribution for which the preseed will be executed.</span>
+                                                                <span class="parameter-a">The ID of the distribution for which the preseed will be authorized to be executed. You will have to attribute the preseed for the VM you want.</span>
                                                             </span>
                                                         </li>
                                                         <li class="list-group-item">
@@ -1464,8 +1666,8 @@
                                             </div>
                                         </div>
                                         <div class="doc-parameters">
-                                            <a data-toggle="collapse" href="#response_preseeds_create"><i>Response :</i></a>
-                                            <div id="response_preseeds_create" class="panel-collapse collapse doc-parameters">
+                                            <a data-toggle="collapse" href="#response_preseed_create"><i>Response :</i></a>
+                                            <div id="response_preseed_create" class="panel-collapse collapse doc-parameters">
                                                 <table class="table table-bordered table-striped table-responsive">
                                                     <tbody>
                                                         <tr>
@@ -1494,10 +1696,10 @@
                                     <div class="doc-container">
                                         <div class="doc-title">
                                             <h4>
-                                                Add a preseed to a slave
+                                                Remove a preseed
                                             </h4>
                                             <p>
-                                                Add a preseed to your VM slave. In the order you want.
+                                                Remove an existant preseed for one distribution.
                                             </p>
                                             <hr>
                                         </div>
@@ -1506,16 +1708,16 @@
                                         </div>
                                         <div class="doc-url">
                                             <p>
-                                                /api/distribution/preseeds/add
+                                                /api/preseed/remove
                                             </p>
                                         </div>
                                         <div class="panel-group">
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <br>
-                                                    <a data-toggle="collapse" href="#parameters_preseed_slave_add" class="" aria-expanded="true"><i>Parameters :</i></a>
+                                                    <a data-toggle="collapse" href="#parameters_preseeds_remove" class="" aria-expanded="true"><i>Parameters :</i></a>
                                                 </div>
-                                                <div id="parameters_preseed_slave_add" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
+                                                <div id="parameters_preseeds_remove" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
                                                     <ul class="list-group">
                                                         <li class="list-group-item">
                                                             <span class="parameter">token_id
@@ -1532,19 +1734,7 @@
                                                         <li class="list-group-item">
                                                             <span class="parameter">preseed_id
                                                                 <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">The ID of the preseed you want to add to the slave.</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">slave_id
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">The ID of the slave you want to add the preseed to.</span>
-                                                            </span>
-                                                        </li>
-                                                        <li class="list-group-item">
-                                                            <span class="parameter">execution_order
-                                                                <span class="parameter-btw">|</span>
-                                                                <span class="parameter-a">(int) The order of execution of this preseed for the slave VM you want. Will be executed, in order, during the installation.</span>
+                                                                <span class="parameter-a">The ID of the preseed to remove.</span>
                                                             </span>
                                                         </li>
                                                     </ul>
@@ -1552,8 +1742,8 @@
                                             </div>
                                         </div>
                                         <div class="doc-parameters">
-                                            <a data-toggle="collapse" href="#response_preseed_slave_add"><i>Response :</i></a>
-                                            <div id="response_preseed_slave_add" class="panel-collapse collapse doc-parameters">
+                                            <a data-toggle="collapse" href="#response_preseeds_remove"><i>Response :</i></a>
+                                            <div id="response_preseeds_remove" class="panel-collapse collapse doc-parameters">
                                                 <table class="table table-bordered table-striped table-responsive">
                                                     <tbody>
                                                         <tr>
@@ -1562,14 +1752,9 @@
                                                             <th>Description</th>
                                                         </tr>
                                                         <tr>
-                                                            <td><pre>list</pre></td>
-                                                            <td><pre><i>(array)</i></pre></td>
-                                                            <td>
-                                                                <pre>[
- "slave_preseed_id": (string),
- "name": (string)
-]
-                                                            </td>
+                                                            <td><pre><i>(nothing)</i></pre></td>
+                                                            <td><pre></pre></td>
+                                                            <td>Returns "error" = false if succeeded.</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

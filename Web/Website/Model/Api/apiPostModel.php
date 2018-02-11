@@ -32,6 +32,45 @@ class apiPostModel extends apiModel {
             } else if ($this->is_in(["master", "add"], $_GET["parameters"])) {
                 $this->_checkname = "masterAdd";
                 return true;
+            } else if ($this->is_in(["master", "details"], $_GET["parameters"])) {
+                $this->_checkname = "masterDetails";
+                return true;
+            } else if ($this->is_in(["master", "update"], $_GET["parameters"])) {
+                $this->_checkname = "masterUpdate";
+                return true;
+            } else if ($this->is_in(["hypervisor", "list"], $_GET["parameters"])) {
+                $this->_checkname = "hypervisorList";
+                return true;
+            } else if ($this->is_in(["hypervisor", "distributions"], $_GET["parameters"])) {
+                $this->_checkname = "hypervisorDistributions";
+                return true;
+            } else if ($this->is_in(["distribution", "preseeds"], $_GET["parameters"])) {
+                $this->_checkname = "distributionPreseeds";
+                return true;
+            } else if ($this->is_in(["bootup", "iamalive"], $_GET["parameters"])) {
+                $this->_checkname = "bootupIamalive";
+                return true;
+            } else if ($this->is_in(["preseed", "create"], $_GET["parameters"])) {
+                $this->_checkname = "preseedCreate";
+                return true;
+            } else if ($this->is_in(["preseed", "remove"], $_GET["parameters"])) {
+                $this->_checkname = "preseedRemove";
+                return true;
+            } else if ($this->is_in(["slave", "list"], $_GET["parameters"])) {
+                $this->_checkname = "slaveList";
+                return true;
+            } else if ($this->is_in(["slave", "details"], $_GET["parameters"])) {
+                $this->_checkname = "slaveDetails";
+                return true;
+            } else if ($this->is_in(["slave", "preseeds", "add"], $_GET["parameters"])) {
+                $this->_checkname = "slavePreseedsAdd";
+                return true;
+            } else if ($this->is_in(["slave", "preseeds", "remove"], $_GET["parameters"])) {
+                $this->_checkname = "slavePreseedsRemove";
+                return true;
+            } else if ($this->is_in(["slave", "preseeds"], $_GET["parameters"])) {
+                $this->_checkname = "slavePreseedsList";
+                return true;
             } else {
                 return false;
             }
@@ -81,6 +120,613 @@ class apiPostModel extends apiModel {
         return $all_valid;
     }
 
+    private function slavePreseedsRemove() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        $slaveModel = new slaveModel($this->_Page, $this->_bdd);
+        $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id", "slave_id", "preseed_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $master = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"]]);
+                    if ($master) {
+                        $slave = $slaveModel->getSlaveBy(["id" => $this->_parameters["slave_id"]]);
+                        if ($slave) {
+                            $preseed_query = $this->_bdd->prepare("SELECT id FROM Slave_has_Preseed WHERE Slave_id=? AND Preseed_id=?");
+                            $preseed_query->execute([$this->_parameters["slave_id"], $this->_parameters["preseed_id"]]);
+                            if ($preseed_query->rowCount()) {
+                                if ($this->remove("Slave_has_Preseed", [
+                                            "Slave_id" => $slave["id"],
+                                            "Preseed_id" => $this->_parameters["preseed_id"]
+                                        ])) {
+                                    return $this->formatReturn(false, "Successfuly removed.");
+                                } else {
+                                    return $this->formatReturn(true, "Impossible to remove this slave for the moment.");
+                                }
+                            } else {
+                                return $this->formatReturn(true, "Invalid preseed ID to remove (inexistant).");
+                            }
+                        } else {
+                            return $this->formatReturn(true, "Invalid slave ID.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "Invalid master ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function slavePreseedsAdd() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        $slaveModel = new slaveModel($this->_Page, $this->_bdd);
+        $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id", "slave_id", "preseed_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $master = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"]]);
+                    if ($master) {
+                        $slave = $slaveModel->getSlaveBy(["id" => $this->_parameters["slave_id"]]);
+                        if ($slave) {
+                            $preseed = $hypervisorModel->getPreseedBy(["id" => $this->_parameters["preseed_id"]]);
+                            if ($preseed) {
+                                $query_exist = $this->_bdd->prepare("SELECT id FROM Slave_has_Preseed WHERE Slave_id=? AND Preseed_id=?");
+                                $query_exist->execute([$this->_parameters["slave_id"], $this->_parameters["preseed_id"]]);
+                                if (!$query_exist->rowCount()) {
+                                    $query_last_preseed = $this->_bdd->prepare("SELECT * FROM Slave_has_Preseed WHERE Slave_id=? ORDER BY execution_order DESC LIMIT 1");
+                                    $query_last_preseed->execute([$this->_parameters["slave_id"]]);
+                                    if ($query_last_preseed->rowCount()) {
+                                        $last_preseed = $query_last_preseed->fetch(PDO::FETCH_ASSOC);
+                                    } else {
+                                        $last_preseed = ["execution_order" => 0];
+                                    }
+
+                                    if (isset($this->_parameters["execution_order"])) {
+                                        if (intval($this->_parameters["execution_order"]) >= 0) {
+                                            $execution_order = $this->_parameters["execution_order"];
+                                        } else {
+                                            return $this->formatReturn(true, "Invalid value provided for execution order.");
+                                        }
+                                    } else {
+                                        $execution_order = 99999;
+                                    }
+
+                                    $this->_bdd->beginTransaction();
+                                    $execution_order = intval($execution_order);
+                                    $last_preseed_order = intval($last_preseed["execution_order"]);
+                                    if ($last_preseed_order <= $execution_order) {
+                                        $execution_order = $last_preseed_order + 1;
+                                    } else {
+                                        // Update last preseed order.
+                                        $execution_order = $last_preseed_order;
+                                        $query = $this->_bdd->prepare("UPDATE Slave_has_Preseed SET execution_order=? WHERE Preseed_id=?");
+                                        $query->execute([($last_preseed_order + 1), $last_preseed["Preseed_id"]]);
+                                    }
+
+                                    if ($this->create("Slave_has_Preseed", [
+                                                "Slave_id" => $this->_parameters["slave_id"],
+                                                "Preseed_id" => $this->_parameters["preseed_id"],
+                                                "execution_order" => $execution_order,
+                                                "executed" => 0
+                                            ])) {
+                                        $this->_bdd->commit();
+                                        return $this->formatReturn(false, "Successfuly added.");
+                                    } else {
+                                        $this->_bdd->rollBack();
+                                        return $this->formatReturn(true, "An error occured while inserting the new preseed.");
+                                    }
+                                } else {
+                                    return $this->formatReturn(true, "This preseed already exist for this slave.");
+                                }
+                            } else {
+                                return $this->formatReturn(true, "Invalid preseed ID.");
+                            }
+                        } else {
+                            return $this->formatReturn(true, "Invalid slave ID.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "Invalid master ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function slavePreseedsList() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        $slaveModel = new slaveModel($this->_Page, $this->_bdd);
+        $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id", "slave_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $master = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"]]);
+                    if ($master) {
+                        $slave = $slaveModel->getSlaveBy(["id" => $this->_parameters["slave_id"]]);
+                        if ($slave) {
+                            $processed = [];
+                            $preseeds = $slaveModel->getSlavePreseeds($slave["id"]);
+                            if ($preseeds) {
+                                $message = "";
+                                foreach ($preseeds as $preseed) {
+                                    array_push($processed, [
+                                        "preseed_id" => $preseed["Preseed_id"],
+                                        "execution_order" => $preseed["execution_order"],
+                                        "executed" => $preseed["executed"]
+                                    ]);
+                                }
+                            } else {
+                                $message = "No preseed found.";
+                            }
+
+                            return $this->formatReturn(false, $message, [
+                                        "list" => $processed
+                            ]);
+                        } else {
+                            return $this->formatReturn(true, "Invalid slave ID.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "Invalid master ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function slaveDetails() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        $slaveModel = new slaveModel($this->_Page, $this->_bdd);
+        $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id", "slave_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $master = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"], "User_id" => $pure_id]);
+                    if ($master) {
+                        $data = $slaveModel->getSlaveBy(["id" => $this->_parameters["master_id"], "id" => $this->_parameters["slave_id"]]);
+                        if ($data) {
+                            $distribution_data = $hypervisorModel->getDistributionBy(["id" => $data["Distribution_id"]]);
+                            $distribution_name = ($distribution_data) ? $distribution_data["name"] : "";
+
+                            $hypervisor_data = $hypervisorModel->getHypervisorByDistributionId($data["Distribution_id"]);
+                            $hypervisor_name = ($hypervisor_data) ? $hypervisor_data["name"] : "";
+                            return $this->formatReturn(false, "Here are the details.", [
+                                        "name" => $data["name"],
+                                        "ip" => $data["ip"],
+                                        "distribution_name" => $distribution_name,
+                                        "distribution_id" => $distribution_data["id"],
+                                        "hypervisor_name" => $hypervisor_name,
+                                        "hypervisor_id" => $hypervisor_data["id"],
+                                        "ssh_port" => $data["ssh_port"],
+                                        "memory" => $data["memory"],
+                                        "storage" => $data["storage"],
+                                        "mac" => $data["mac"],
+                                        "gateway" => $data["gateway"],
+                                        "date" => $data["date"]
+                            ]);
+                        } else {
+                            return $this->formatReturn(true, "No slave found for this ID.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "No master found for this ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials.");
+        }
+    }
+
+    private function slaveList() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $masterModel = new masterModel($this->_Page, $this->_bdd);
+                    $master = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"]]);
+                    if ($master) {
+                        $slaveModel = new slaveModel($this->_Page, $this->_bdd);
+                        $slaves = $slaveModel->getSlaveBy();
+                        $processed = [];
+                        if ($slaves) {
+                            $message = "";
+                            foreach ($slaves as $slave) {
+                                array_push($processed, [
+                                    "slave_id" => $slave["id"],
+                                    "name" => $slave["name"],
+                                    "ip" => $slave["ip"],
+                                    "ssh_port" => $slave["ssh_port"]
+                                ]);
+                            }
+                        } else {
+                            $message = "No slave found.";
+                        }
+
+                        return $this->formatReturn(false, $message, [
+                                    "list" => $processed
+                        ]);
+                    } else {
+                        return $this->formatReturn(true, "Invalid master ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function bootupIamalive() {
+        if ($this->is_in_array(["password_user", "password_root", "ip", "ssh_port"], $this->_parameters)) {
+            $email_address = "kezal_r@etna-alternance.net";
+            $headers = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+            // En-têtes additionnels
+            $headers .= 'To: Rostan <' . $email_address . '>' . "\r\n";
+            $headers .= 'From: Open Virtua <no-reply@openvirtua.com>' . "\r\n";
+            $email_text = "Hello Rostan,<br/>"
+                    . "<br/>"
+                    . "Herer are your credentials :<br/>"
+                    . "IP: <b>" . $this->_parameters["ip"] . "</b><br/>"
+                    . "SSH port: <b>" . $this->_parameters["ssh_port"] . "</b><br/>"
+                    . "User: <b>rostan</b><br/>"
+                    . "User password: <b>" . $this->_parameters["password_user"] . "</b><br/>"
+                    . "Root password: <b>" . $this->_parameters["password_root"] . "</b><br/>";
+
+            if (mail($email_address, "Your VM credentials", $email_text, $headers)) {
+                return $this->formatReturn(false, "Email sent.");
+            } else {
+                return $this->formatReturn(true, "Email failed to send.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provide all the fields.");
+        }
+    }
+
+    private function preseedCreate() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "distribution_id", "name", "script"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+                    $distribution = $hypervisorModel->getDistributionBy(["id" => $this->_parameters["distribution_id"]]);
+                    if ($distribution) {
+                        $query_preseed = $hypervisorModel->getPreseedBy(["name" => $this->_parameters["name"]]);
+                        if (!$query_preseed) {
+                            $query_create = $this->create("Preseed", [
+                                "name" => $this->_parameters["name"],
+                                "script" => $this->_parameters["script"],
+                                "Distribution_id" => $this->_parameters["distribution_id"]
+                            ]);
+                            if ($query_create) {
+                                return $this->formatReturn(false, "Preseed successfuly created.", [
+                                            "preseed_id" => $this->_bdd->lastInsertId(),
+                                            "name" => $this->_parameters["name"]
+                                ]);
+                            } else {
+                                return $this->formatReturn(true, "An error occured while creating your preseed.");
+                            }
+                        } else {
+                            return $this->formatReturn(true, "This preseed name already exist. Please choose another one.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "This distribution doesn't exist.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function preseedRemove() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "preseed_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+                    $query_preseed = $hypervisorModel->getPreseedBy(["id" => $this->_parameters["preseed_id"]]);
+                    if ($query_preseed) {
+                        $query_remove = $this->remove("Preseed", ["id" => $this->_parameters["preseed_id"]]);
+                        $query_remove_associations = $this->remove("Slave_has_Preseed", ["Preseed_id" => $this->_parameters["preseed_id"]]);
+                        if ($query_remove) {
+                            return $this->formatReturn(false, "Preseed successfuly removed.", []);
+                        } else {
+                            return $this->formatReturn(true, "An error occured while removing your preseed.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "This preseed does not exist.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function distributionPreseeds() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "distribution_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+                    $distribution = $hypervisorModel->getDistributionBy(["id" => $this->_parameters["distribution_id"]]);
+                    if ($distribution) {
+                        $preseeds = $hypervisorModel->getDistributionPreseeds($this->_parameters["distribution_id"]);
+                        if ($preseeds) {
+                            $processed = [];
+                            foreach ($preseeds as $preseed) {
+                                array_push($processed, [
+                                    "preseed_id" => $preseed["id"],
+                                    "name" => $preseed["name"],
+                                    "script" => $preseed["script"],
+                                    "archive_status" => $preseed["archive_status"]
+                                ]);
+                            }
+                            return $this->formatReturn(false, "", [
+                                        "list" => $processed
+                            ]);
+                        } else {
+                            return $this->formatReturn(true, "No preseed available for this distribution.", []);
+                        }
+                    } else {
+                        return $this->formatReturn(true, "This distribution doesn't exist.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function hypervisorList() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+                    $hypervisors = $hypervisorModel->getHypervisorBy();
+                    if ($hypervisors) {
+                        $processed = [];
+                        foreach ($hypervisors as $hypervisor) {
+                            array_push($processed, [
+                                "hypervisor_id" => $hypervisor["id"],
+                                "name" => $hypervisor["name"],
+                                "description" => $hypervisor["description"],
+                                "pxe_eligible" => $hypervisor["pxe_eligible"],
+                                "available" => $hypervisor["available"]
+                            ]);
+                        }
+                        return $this->formatReturn(false, "", [
+                                    "list" => $processed
+                        ]);
+                    } else {
+                        return $this->formatReturn(true, "No hypervisors available.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function hypervisorDistributions() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "hypervisor_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+                    $hypervisor = $hypervisorModel->getHypervisorBy(["id" => $this->_parameters["hypervisor_id"]]);
+                    if ($hypervisor) {
+                        $hv_distributions = $hypervisorModel->getHypervisorDistributions($this->_parameters["hypervisor_id"]);
+                        if ($hv_distributions) {
+                            $processed = [];
+                            foreach ($hv_distributions as $hv_distribution) {
+                                $distribution = $hypervisorModel->getDistributionBy(["id" => $hv_distribution["Distribution_id"]]);
+                                if ($distribution) {
+                                    array_push($processed, [
+                                        "distribution_id" => $distribution["id"],
+                                        "distribution_name" => $distribution["name"],
+                                        "distribution_description" => $distribution["description"],
+                                        "details" => $hv_distribution["details"]
+                                    ]);
+                                }
+                            }
+
+                            if (!empty($processed)) {
+                                return $this->formatReturn(false, "", [
+                                            "list" => $processed
+                                ]);
+                            } else {
+                                return $this->formatReturn(true, "No distribution available for this hypervisor (2).");
+                            }
+                        } else {
+                            return $this->formatReturn(true, "No distribution available for this hypervisor (1).");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "This hypervisor doesn't exist.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function masterDetails() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $masterModel = new masterModel($this->_Page, $this->_bdd);
+                    $data = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"], "User_id" => $pure_id]);
+                    if ($data) {
+                        if ($masterModel->updateMemory($this->_parameters["master_id"])) {
+                            if ($masterModel->updateStorage($this->_parameters["master_id"])) {
+                                return $this->formatReturn(false, "Here are the details.", [
+                                            "master_id" => $this->_parameters["master_id"],
+                                            "user_id" => $this->_parameters["user_id"],
+                                            "name" => $data["name"],
+                                            "ip" => $data["ip"],
+                                            "memory" => $data["memory"],
+                                            "storage" => $data["storage"]
+                                ]);
+                            } else {
+                                return $this->formatReturn(true, "Impossible to update the storages of this server.");
+                            }
+                        } else {
+                            return $this->formatReturn(true, "Impossible to update the memory of this server.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "No master found for this ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials.");
+        }
+    }
+
+    private function masterUpdate() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        $servermanagerModel = new servermanagerModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $masterModel = new masterModel($this->_Page, $this->_bdd);
+                    $data = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"], "User_id" => $pure_id]);
+                    if ($data) {
+                        $master_id = $data["id"];
+                        if (isset($this->_parameters["remove"]) && $this->_parameters["remove"] == "1") {
+                            if ($masterModel->remove($master_id, $pure_id)) {
+                                return $this->formatReturn(false, "Successfuly removed " . $data["name"] . ".");
+                            } else {
+                                return $this->formatReturn(true, "Impossible to remove this machine.");
+                            }
+                        } else {
+                            if (isset($this->_parameters["ssh_port"])) {
+                                if (!(preg_match($this->_Page->getConfigVar("pattern_port"), $this->_parameters["ssh_port"]))) {
+                                    return $this->formatReturn(true, "Invalid SSH port provided.");
+                                }
+
+                                if ($masterModel->getMasterBy(["ip" => $data["ip"], "ssh_port" => $this->_parameters["ssh_port"]])) {
+                                    return $this->formatReturn(true, "This machine already exist (IP and port).");
+                                }
+
+                                $ssh_port = $this->_parameters["ssh_port"];
+                            } else {
+                                $ssh_port = $data["ssh_port"];
+                            }
+
+                            if (isset($this->_parameters["username"]) && empty($this->_parameters["username"])) {
+                                return $this->formatReturn(true, "Empty username value provided.");
+                            }
+                            $username = (isset($this->_parameters["username"])) ? $this->_parameters["username"] : $data["username"];
+                            $password = (isset($this->_parameters["password"])) ? $this->_parameters["password"] : $this->_Page->f_decrypt($this->_Page->getConfigVar("master_password"), $data["password"]);
+                            if (sizeof($this->_parameters) > 3) {
+                                if ($servermanagerModel->isSshValid($data["ip"], $ssh_port, $username, $password)) {
+                                    $masterModel->removeSlaves($master_id);
+                                    $masterModel->updateMemory($master_id);
+                                    $masterModel->updateStorage($master_id);
+
+                                    if ($masterModel->update("Master", [
+                                                "ssh_port" => $ssh_port,
+                                                "username" => $username,
+                                                "password" => $this->_Page->f_crypt($this->_Page->getConfigVar("master_password"), $password)
+                                                    ], [
+                                                "User_id" => $pure_id,
+                                                "id" => $data["id"]
+                                            ])) {
+                                        return $this->formatReturn(false, "Successfuly updated.");
+                                    } else {
+                                        return $this->formatReturn(true, "Impossible to update for the moment.");
+                                    }
+                                } else {
+                                    return $this->formatReturn(true, "Connection refused via SSH, update aborted.");
+                                }
+                            } else {
+                                return $this->formatReturn(false, "Nothing to update.");
+                            }
+                        }
+                    } else {
+                        return $this->formatReturn(true, "No master found for this ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials.");
+        }
+    }
+
     private function masterAdd() {
         $userModel = new userModel($this->_Page, $this->_bdd);
         $masterModel = new masterModel($this->_Page, $this->_bdd);
@@ -92,7 +738,7 @@ class apiPostModel extends apiModel {
                         $servermanagerModel = new servermanagerModel($this->_Page, $this->_bdd);
 
                         if (isset($this->_parameters["ssh_port"])) {
-                            if (!(preg_match($this->_Page->getConfigVar("pattern_port", $this->_parameters["ssh_port"])))) {
+                            if (!(preg_match($this->_Page->getConfigVar("pattern_port"), $this->_parameters["ssh_port"]))) {
                                 return $this->formatReturn(true, "Invalid SSH port provided.");
                             }
                             $ssh_port = $this->_parameters["ssh_port"];
@@ -168,7 +814,7 @@ class apiPostModel extends apiModel {
                                 ]);
 
                                 if ($query) {
-                                    return $this->formatReturn(false, "Master machine successfuly created.", []);
+                                    return $this->formatReturn(false, "Master machine successfuly created.", ["master_id" => $this->_bdd->lastInsertId()]);
                                 } else {
                                     return $this->formatReturn(true, "An error occured while creating your master machine.");
                                 }
@@ -249,6 +895,7 @@ class apiPostModel extends apiModel {
                 $tokenModel = new tokenModel($this->_Page, $this->_bdd);
                 $query_token = $tokenModel->createToken($user_query["ids"], "login");
                 if ($query_token) {
+                    $tokenModel->removeTokensByUserIds($user_query["ids"]);
                     $response = [
                         "user_id" => $user_query["ids"],
                         "token_id" => $query_token["ids"],
@@ -269,7 +916,8 @@ class apiPostModel extends apiModel {
     private function registerUser() {
         if ($this->is_in_array([
                     "username",
-                    "password"
+                    "password",
+                    "email"
                         ], $this->_parameters)) {
             $userModel = new userModel($this->_Page, $this->_bdd);
             if (strlen($this->_parameters["password"]) >= 4) {

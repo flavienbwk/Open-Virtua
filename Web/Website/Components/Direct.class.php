@@ -91,6 +91,12 @@ class Direct {
         $this->_session_follow_paths = &$_SESSION["directframework"]["follow_paths"];
         $this->_session_notifications = &$_SESSION["directframework"]["notifications"];
         $this->buildAdditionalFunctions();
+
+        if (PHP_MAJOR_VERSION >= 7) {
+            set_error_handler(function ($errno, $errstr) {
+                return strpos($errstr, 'Declaration of') === 0;
+            }, E_WARNING);
+        }
     }
 
     private function buildAdditionalFunctions() {

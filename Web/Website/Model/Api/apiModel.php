@@ -105,7 +105,24 @@ class apiModel {
         return $query;
     }
 
-    protected function formatReturn($error_code, $message, $result = null) {
+    public function remove($table, $array) {
+        $i = 0;
+        $parameters = "";
+        $array_keys = array_keys($array);
+
+        while ($i < sizeof($array)) {
+            $name = $array_keys[$i];
+            $parameters .= ($i == sizeof($array) - 1) ? " AND " . $name . "=" . ":" . $name : " WHERE " . $name . "=" . ":" . $name;
+            $i++;
+        }
+        
+        $sql = "DELETE FROM $table $parameters";
+        $query = $this->_bdd->prepare($sql);
+        $query->execute($array);
+        return $query;
+    }
+
+    protected function formatReturn($error_code, $message, $result = []) {
         return ["error" => $error_code, "message" => $message, "results" => $result];
     }
 

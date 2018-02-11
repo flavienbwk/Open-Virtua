@@ -18,8 +18,8 @@ class apiGetModel extends apiModel {
         if (!isset($_GET["parameters"]) || $parameters == null) {
             $this->_checkname = "getApiTest";
             return true;
-        } else if ($this->is_in(["miners", "list"], $parameters)) {
-            $this->_checkname = "getMinersList";
+        } else if ($this->is_in(["random_name"], $parameters)) {
+            $this->_checkname = "getRandomName";
             return true;
         } else {
             return false;
@@ -54,6 +54,26 @@ class apiGetModel extends apiModel {
         }
 
         return ($count == sizeof($parameters)) ? true : false;
+    }
+
+    private function getRandomName() {
+        $names = [
+            "fred",
+            "jack",
+            "pierre",
+            "feuille",
+            "ciseaux",
+            "jeanne",
+            "robin",
+            "samir",
+            "batounette",
+            "papatte",
+            "jeremie",
+            "tux"
+        ];
+
+        $name = $names[rand(0, sizeof($names))];
+        return $this->formatReturn(true, $name, ["name" => $name]);
     }
 
     public function getApiTest() {

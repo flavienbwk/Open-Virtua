@@ -94,4 +94,14 @@ class tokenModel {
         }
     }
 
+    public function removeTokensByUserIds($user_ids) {
+        if ($this->_Page->getConfigVar("check_token_expiration")) {
+            $query = $this->_bdd->prepare("DELETE FROM Token WHERE User_ids=? AND expiration<=?");
+            $query->execute([$user_ids, time()]);
+            return $query->rowCount();
+        } else {
+            return true;
+        }
+    }
+
 }

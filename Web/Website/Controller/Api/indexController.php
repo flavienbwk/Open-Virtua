@@ -71,6 +71,7 @@ if (isset($header[$api_key_name]) || isset($header[strtolower($api_key_name)])) 
     }
 }
 
+header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: x-ov-api-key");
 echo json_encode($response);
