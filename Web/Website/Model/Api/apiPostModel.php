@@ -71,6 +71,12 @@ class apiPostModel extends apiModel {
             } else if ($this->is_in(["slave", "preseeds"], $_GET["parameters"])) {
                 $this->_checkname = "slavePreseedsList";
                 return true;
+            } else if ($this->is_in(["slave", "create"], $_GET["parameters"])) {
+                $this->_checkname = "slaveCreate";
+                return true;
+            } else if ($this->is_in(["slave", "remove"], $_GET["parameters"])) {
+                $this->_checkname = "slaveRemove";
+                return true;
             } else {
                 return false;
             }
@@ -118,6 +124,153 @@ class apiPostModel extends apiModel {
             }
         }
         return $all_valid;
+    }
+
+    private function slaveCreate() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        $slaveModel = new slaveModel($this->_Page, $this->_bdd);
+        $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+        $dockerModel = new dockerModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id", "hypervisor_id", "distribution_id", "name", "username", "password", "memory", "storage"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $master = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"]]);
+                    if ($master) {
+                        $hypervisor = $hypervisorModel->getHypervisorBy(["id" => $this->_parameters["hypervisor_id"]]);
+                        if ($hypervisor) {
+                            $distribution = $hypervisorModel->getDistributionBy(["id" => $this->_parameters["distribution_id"]]);
+                            if ($distribution) {
+                                $distribution_hypervisor = $hypervisorModel->getDistributionHypervisorBy([
+                                    "Distribution_id" => $distribution["id"],
+                                    "Hypervisor_id" => $hypervisor["id"]
+                                ]);
+                                if ($distribution_hypervisor) {
+                                    $query_slave = $slaveModel->getSlaveBy(["name" => $this->_parameters["name"]]);
+                                    if (!$query_slave) {
+                                        $this->_bdd->beginTransaction();
+                                        $name = $this->_parameters["name"];
+                                        $username = $this->_parameters["username"];
+                                        $password = $this->_parameters["password"];
+                                        $query_create = $this->create("Slave", [
+                                            "name" => $name,
+                                            "ip" => $master["ip"],
+                                            "ssh_port" => "",
+                                            "mac" => "",
+                                            "gateway" => "",
+                                            "username" => $username,
+                                            "password" => $password,
+                                            "memory" => "",
+                                            "storage" => "",
+                                            "Master_id" => $master["id"],
+                                            "Distribution_id" => $distribution["id"],
+                                            "date" => time()
+                                        ]);
+
+                                        // Docker = 2.
+                                        if ($hypervisor["id"] == "2") {
+                                            if (!$dockerModel->initDocker($master, $hypervisor)) {
+                                                $this->_bdd->rollBack();
+                                                return $this->formatReturn(true, "Impossible to install Docker on the master server.");
+                                            }
+
+                                            if (!$dockerModel->createDockerInstance($name, $master)) {
+                                                $this->_bdd->rollBack();
+                                                return $this->formatReturn(true, "Impossible to initialize the Docker instance.");
+                                            }
+
+                                            $this->_bdd->commit();
+                                            return $this->formatReturn(false, "Slave successfuly created.", ["slave_id" => $this->_bdd->lastInsertId()]);
+                                        } else {
+                                            return $this->formatReturn(true, "We don't allow this hypervisor for the moment.");
+                                        }
+                                    } else {
+                                        return $this->formatReturn(true, "This VM name already exist. Choose another one.");
+                                    }
+                                } else {
+                                    return $this->formatReturn(true, "Invalid distribution-hypervisor pair.");
+                                }
+                            } else {
+                                return $this->formatReturn(true, "Invalid distribution ID.");
+                            }
+                        } else {
+                            return $this->formatReturn(true, "Invalid hypervisor ID.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "Invalid master ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
+    }
+
+    private function slaveRemove() {
+        $userModel = new userModel($this->_Page, $this->_bdd);
+        $masterModel = new masterModel($this->_Page, $this->_bdd);
+        $slaveModel = new slaveModel($this->_Page, $this->_bdd);
+        $hypervisorModel = new hypervisorModel($this->_Page, $this->_bdd);
+        $dockerModel = new dockerModel($this->_Page, $this->_bdd);
+        if ($this->is_in_array(["user_id", "token_id", "master_id", "hypervisor_id", "slave_id"], $this->_parameters)) {
+            if ($this->checkUserTokenCredentials($this->_parameters["user_id"], $this->_parameters["token_id"])) {
+                $pure_id = $userModel->getIdByIds($this->_parameters["user_id"]);
+                if ($pure_id) {
+                    $master = $masterModel->getMasterBy(["id" => $this->_parameters["master_id"]]);
+                    if ($master) {
+                        $hypervisor = $hypervisorModel->getHypervisorBy(["id" => $this->_parameters["hypervisor_id"]]);
+                        if ($hypervisor) {
+                            $slave = $slaveModel->getSlaveBy(["id" => $this->_parameters["slave_id"]]);
+                            if ($slave) {
+                                $distribution_hypervisor = $hypervisorModel->getDistributionHypervisorBy([
+                                    "Distribution_id" => $slave["distribution"],
+                                    "Hypervisor_id" => $hypervisor["id"]
+                                ]);
+                                if ($distribution_hypervisor) {
+                                    $this->_bdd->beginTransaction();
+                                    if ($this->remove("Slave", ["id" => $slave["id"]])) {
+                                        // Docker = 2.
+                                        if ($hypervisor["id"] == "2") {
+                                            if ($dockerModel->removeDockerInstance($master, $slave["name"])) {
+                                                $this->_bdd->commit();
+                                                return $this->formatReturn(false, "Done removing the Docker instance.");
+                                            } else {
+                                                $this->_bdd->rollBack();
+                                                return $this->formatReturn(true, "Impossible to remove this Docker instance on the master server.");
+                                            }
+                                        } else {
+                                            $this->_bdd->rollBack();
+                                            return $this->formatReturn(true, "We don't allow this hypervisor for the moment.");
+                                        }
+                                    } else {
+                                        return $this->formatReturn(true, "Impossible to remove the slave from database.");
+                                    }
+                                } else {
+                                    return $this->formatReturn(true, "Invalid distribution-hypervisor pair.");
+                                }
+                            } else {
+                                return $this->formatReturn(true, "Invalid slave ID.");
+                            }
+                        } else {
+                            return $this->formatReturn(true, "Invalid hypervisor ID.");
+                        }
+                    } else {
+                        return $this->formatReturn(true, "Invalid master ID.");
+                    }
+                } else {
+                    return $this->formatReturn(true, "Impossible to get the ID from the IDS.");
+                }
+            } else {
+                return $this->formatReturn(true, "Unauthorized token ID or user ID.");
+            }
+        } else {
+            return $this->formatReturn(true, "Please provided the authentication credentials or check you've filled all the fields.");
+        }
     }
 
     private function slavePreseedsRemove() {
@@ -265,8 +418,10 @@ class apiPostModel extends apiModel {
                             if ($preseeds) {
                                 $message = "";
                                 foreach ($preseeds as $preseed) {
+                                    $preseed_details = $hypervisorModel->getPreseedBy(["id" => $preseed["Preseed_id"]]);
                                     array_push($processed, [
                                         "preseed_id" => $preseed["Preseed_id"],
+                                        "preseed_name" => $preseed_details["name"],
                                         "execution_order" => $preseed["execution_order"],
                                         "executed" => $preseed["executed"]
                                     ]);
@@ -363,7 +518,8 @@ class apiPostModel extends apiModel {
                                     "slave_id" => $slave["id"],
                                     "name" => $slave["name"],
                                     "ip" => $slave["ip"],
-                                    "ssh_port" => $slave["ssh_port"]
+                                    "ssh_port" => $slave["ssh_port"],
+                                    "distribution_id" => $slave["Distribution_id"]
                                 ]);
                             }
                         } else {

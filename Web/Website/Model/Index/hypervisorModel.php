@@ -78,6 +78,32 @@ class hypervisorModel extends apiModel {
         }
     }
 
+    public function getDistributionHypervisorBy($data = false) {
+        $parameters = " WHERE";
+        $counter = 0;
+        $data = ($data) ? $data : [];
+        foreach ($data as $item => $value) {
+            if (!$counter)
+                $parameters .= " `" . $item . "`='" . $value . "'";
+            else
+                $parameters .= " AND `" . $item . "`='" . $value . "'";
+            $counter++;
+        }
+
+        $parameters = ($data) ? $parameters : "";
+        $query = $this->_bdd->prepare("SELECT * FROM Hypervisor_has_Distribution" . $parameters);
+        $query->execute();
+        if ($query->rowCount()) {
+            if (!empty($parameters)) {
+                return $query->fetch(PDO::FETCH_ASSOC);
+            } else {
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } else {
+            return false;
+        }
+    }
+
     public function getPreseedBy($data = false) {
         $parameters = " WHERE";
         $counter = 0;

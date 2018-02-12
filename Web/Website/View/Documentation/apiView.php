@@ -885,9 +885,9 @@
                                                             <th>Description</th>
                                                         </tr>
                                                         <tr>
-                                                            <td><pre>master_id</pre></td>
+                                                            <td><pre>slave_id</pre></td>
                                                             <td><pre><i>(string)</i></pre></td>
-                                                            <td>The ID of the master server created.</td>
+                                                            <td>The ID of the slave server created.</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -1340,6 +1340,89 @@
                                         <div class="doc-parameters">
                                             <a data-toggle="collapse" href="#response_preseed_slave_remove"><i>Response :</i></a>
                                             <div id="response_preseed_slave_remove" class="panel-collapse collapse doc-parameters">
+                                                <table class="table table-bordered table-striped table-responsive">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Index</th>
+                                                            <th>Return value</th>
+                                                            <th>Description</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><pre><i>(array)</i></pre></td>
+                                                            <td><pre></pre></td>
+                                                            <td>If the query succeed, you will get the "error" key to "false", as usual.</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="doc-container">
+                                        <div class="doc-title">
+                                            <h4>
+                                                Remove a slave
+                                            </h4>
+                                            <p>
+                                                Well, it's... removing the slave.
+                                            </p>
+                                            <hr>
+                                        </div>
+                                        <div class="doc-method-post">
+                                            POST
+                                        </div>
+                                        <div class="doc-url">
+                                            <p>
+                                                /api/slave/remove
+                                            </p>
+                                        </div>
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <br>
+                                                    <a data-toggle="collapse" href="#parameters_slave_remove" class="" aria-expanded="true"><i>Parameters :</i></a>
+                                                </div>
+                                                <div id="parameters_slave_remove" class="panel-collapse doc-parameters collapse in" aria-expanded="true" style="">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">token_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The login token.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">user_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">ID of the user logged in.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">hypervisor_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the hypervisor of the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">slave_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the slave you want to remove.</span>
+                                                            </span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <span class="parameter">master_id
+                                                                <span class="parameter-btw">|</span>
+                                                                <span class="parameter-a">The ID of the master on which is created the slave.</span>
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="doc-parameters">
+                                            <a data-toggle="collapse" href="#response_slave_remove"><i>Response :</i></a>
+                                            <div id="response_slave_remove" class="panel-collapse collapse doc-parameters">
                                                 <table class="table table-bordered table-striped table-responsive">
                                                     <tbody>
                                                         <tr>

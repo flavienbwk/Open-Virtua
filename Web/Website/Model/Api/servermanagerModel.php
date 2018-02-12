@@ -44,10 +44,21 @@ class servermanagerModel extends apiModel {
         if ($this->isUp($ip)) {
             $connection = @ssh2_connect($ip, $port);
             if (@ssh2_auth_password($connection, $username, $password)) {
-                return true;
+                return $connection;
             } else {
                 return false;
             }
+        } else {
+            return false;
+        }
+    }
+
+    public function command($connection, $command) {
+        $stream = ssh2_exec($connection, $command);
+        stream_set_blocking($stream, true);
+        $stream_out = stream_get_contents($stream);
+        if (!empty($stream_out)) {
+            return $stream_out;
         } else {
             return false;
         }
