@@ -1,0 +1,29 @@
+page-show-master-detail {
+  .card-background-page {
+    ion-card {
+      text-align: center;
+      border-radius: 20px;
+    }
+
+    ion-card-header {
+      font-size: 1.5em;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    ion-label {
+      text-align: justify;
+      font-size: .8em;
+      width: 100%;
+    }
+
+    .item {
+      border-bottom: 1px solid gray;
+    }
+
+    .btn-add-slave-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+  }
+}

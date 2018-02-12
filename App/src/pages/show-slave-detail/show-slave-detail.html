@@ -1,0 +1,62 @@
+<!--
+  Generated template for the ShowSlaveDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>VM Infos</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="card-background-page">
+    <!-- MASTER DETAILS -->
+    <ion-card>
+        <ion-card-header>
+            {{slave_detail['name']}}
+        </ion-card-header>
+
+        <ion-list class="card-subtitle">
+            <div ion-item>
+                <ion-icon name="git-network" item-start></ion-icon>
+                Hyperv. - {{slave_detail['hypervisor_name']}}
+            </div>
+            <div ion-item>
+                <ion-icon name="git-network" item-start></ion-icon>
+                Distrib. - {{slave_detail['distribution_name']}}
+            </div>
+            <div ion-item>
+                <ion-icon name="at" item-start></ion-icon>
+                IP - {{slave_detail['ip']}}
+            </div>
+
+            <div ion-item>
+                <ion-icon name="finger-print" item-start></ion-icon>
+                Mac - {{slave_detail['mac']}}
+            </div>
+
+            <div ion-item>
+                <ion-icon name="eye" item-start></ion-icon>
+                Gateway - {{slave_detail['gateway']}}
+            </div>
+
+            <div ion-item>
+                <ion-icon name="crop" item-start></ion-icon>
+                RAM - {{slave_detail['memory']}} Mo
+            </div>
+
+            <div ion-item>
+                <ion-icon name="disc" item-start></ion-icon>
+                Storage - {{slave_detail['storage']}} Mo
+            </div>
+        </ion-list>
+    </ion-card>
+    <button disabled ion-button icon-right (click)="removeSlave(slave_detail['hypervisor_id'])">
+        Remove
+        <ion-icon name="ios-cog-outline"></ion-icon>
+    </button>
+</ion-content>
